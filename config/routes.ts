@@ -36,6 +36,25 @@
 		component: './RandomUser',
 		icon: 'ArrowsAltOutlined',
 	},
+	{
+		path: '/orders',
+		name: 'Đơn hàng',         // Tên hiển thị trên menu
+		icon: 'shopping',         // Icon Ant Design
+		component: '@/pages/orders/index',
+	},
+	{
+		path: '/customers',
+		name: 'Khách hàng',
+		icon: 'team',
+		component: '@/pages/customers/index', 
+	},
+	{
+		path: '/products',
+		name: 'Sản phẩm',
+		icon: 'appstore',
+		component: '@/pages/products/index',  
+	},
+
 
 	// DANH MUC HE THONG
 	// {
