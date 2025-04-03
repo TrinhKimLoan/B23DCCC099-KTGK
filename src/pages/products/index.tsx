@@ -1,63 +1,26 @@
-import { Button, Table, Space } from 'antd';
-import { useModel } from 'umi';
-import ProductForm from './components/ProductForm';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Table, Input } from 'antd';
+import { getProducts } from '@/services/product.service';
+import { Product } from '@/models/product.model';
 
-export default function ProductPage() {
-  const { products, deleteProduct } = useModel('product');
-  const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+const ProductList = () => {
+  const [products] = useState<Product[]>(getProducts());
+  const [search, setSearch] = useState<string>('');
 
-  const columns = [
-    {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Giá (VND)',
-      dataIndex: 'price',
-      render: (value: number) => value.toLocaleString(),
-    },
-    {
-      title: 'Tồn kho',
-      dataIndex: 'stock',
-    },
-    {
-      title: 'Thao tác',
-      render: (_, record: Product) => (
-        <Space>
-          <Button onClick={() => {
-            setEditingProduct(record);
-            setShowForm(true);
-          }}>Sửa</Button>
-          <Button danger onClick={() => deleteProduct(record.id)}>Xóa</Button>
-        </Space>
-      ),
-    },
-  ];
+  const filteredProducts = products.filter(p => 
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <Button type="primary" onClick={() => setShowForm(true)}>
-          Thêm sản phẩm
-        </Button>
-      </div>
-
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={products}
-      />
-
-      <ProductForm
-        visible={showForm}
-        onClose={() => {
-          setShowForm(false);
-          setEditingProduct(undefined);
-        }}
-        initialValues={editingProduct}
-      />
-    </div>
+    <>
+      <Input placeholder="Tìm sản phẩm..." onChange={e => setSearch(e.target.value)} />
+      <Table dataSource={filteredProducts} columns={[
+        { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
+        { title: 'Giá', dataIndex: 'price', key: 'price' },
+        { title: 'Số lượng tồn kho', dataIndex: 'stock', key: 'stock' },
+      ]}/>
+    </>
   );
-}
+};
+
+export default ProductList;

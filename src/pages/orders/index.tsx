@@ -1,21 +1,25 @@
-import { useModel } from 'umi';
-import OrderTable from './components/OrderTable';
-import OrderForm from './components/OrderForm';
+// File: src/pages/orders/index.tsx
+import React from 'react';
+import { Row, Col, Divider } from 'antd';
+import OrderForm from './OrderForm';
+import OrderTable from './OrderTable';
 
-export default function OrderPage() {
-  const { orders, searchTerm, statusFilter } = useModel('order');
-  
+const OrdersPage = () => {
   return (
-    <div className="p-4">
-      <div className="mb-4 flex justify-between">
-        <OrderForm />
-      </div>
-      
-      <OrderTable 
-        data={orders}
-        searchTerm={searchTerm}
-        statusFilter={statusFilter}
-      />
+    <div style={{ padding: '24px' }}>
+      <Row gutter={16}>
+        <Col span={8}>
+          <h2>Tạo đơn hàng</h2>
+          <OrderForm />
+        </Col>
+        <Col span={16}>
+          <h2>Danh sách đơn hàng</h2>
+          <OrderTable />
+        </Col>
+      </Row>
+      <Divider />
     </div>
   );
-}
+};
+
+export default OrdersPage;

@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
-import type { Customer } from '@/services/order/order.types';
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
 
 const CUSTOMERS_KEY = 'customers';
 
 export default function useCustomerModel() {
   const [customers, setCustomers] = useState<Customer[]>([]);
 
-  // Tự động load khi khởi tạo
   useEffect(() => {
     const saved = localStorage.getItem(CUSTOMERS_KEY);
     setCustomers(saved ? JSON.parse(saved) : []);
@@ -23,9 +28,7 @@ export default function useCustomerModel() {
   };
 
   const updateCustomer = (id: string, newData: Partial<Customer>) => {
-    const updated = customers.map(c => 
-      c.id === id ? { ...c, ...newData } : c
-    );
+    const updated = customers.map(c => (c.id === id ? { ...c, ...newData } : c));
     save(updated);
   };
 

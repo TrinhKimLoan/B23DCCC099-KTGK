@@ -1,57 +1,26 @@
-import { Button, Table, Space } from 'antd';
-import { useModel } from 'umi';
-import CustomerForm from './components/CustomerForm';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Table, Input } from 'antd';
+import { getCustomers } from '@/services/customer.service';
+import { Customer } from '@/models/customer.model';
 
-export default function CustomerPage() {
-  const { customers } = useModel('customer');
-  const [showForm, setShowForm] = useState(false);
-  const [editingCustomer, setEditingCustomer] = useState<Customer | undefined>();
+const CustomerList = () => {
+  const [customers] = useState<Customer[]>(getCustomers());
+  const [search, setSearch] = useState<string>('');
 
-  const columns = [
-    {
-      title: 'Tên khách hàng',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Số điện thoại',
-      dataIndex: 'phone',
-    },
-    {
-      title: 'Thao tác',
-      render: (_, record: Customer) => (
-        <Space>
-          <Button onClick={() => {
-            setEditingCustomer(record);
-            setShowForm(true);
-          }}>Sửa</Button>
-        </Space>
-      ),
-    },
-  ];
+  const filteredCustomers = customers.filter(c => 
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <Button type="primary" onClick={() => setShowForm(true)}>
-          Thêm khách hàng
-        </Button>
-      </div>
-
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={customers}
-      />
-
-      <CustomerForm 
-        visible={showForm}
-        onClose={() => {
-          setShowForm(false);
-          setEditingCustomer(undefined);
-        }}
-        initialValues={editingCustomer}
-      />
-    </div>
+    <>
+      <Input placeholder="Tìm khách hàng..." onChange={e => setSearch(e.target.value)} />
+      <Table dataSource={filteredCustomers} columns={[
+        { title: 'Tên', dataIndex: 'name', key: 'name' },
+        { title: 'Email', dataIndex: 'email', key: 'email' },
+        { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
+      ]}/>
+    </>
   );
-}
+};
+
+export default CustomerList;

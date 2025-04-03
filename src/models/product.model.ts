@@ -1,6 +1,23 @@
+// File: src/models/product.model.ts
 import { useState, useEffect } from 'react';
-import type { Product } from '@/services/order/order.types';
-import type { Order, OrderItem } from '@/services/order/order.types';
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+}
+
+export interface OrderItem {
+  productId: string;
+  quantity: number;
+}
+
+export interface Order {
+  id: string;
+  customerId: string;
+  items: OrderItem[];
+  status: string;
+}
 
 const PRODUCTS_KEY = 'products';
 
@@ -17,7 +34,6 @@ export default function useProductModel() {
     setProducts(newProducts);
   };
 
-  // Kiểm tra sản phẩm có trong đơn hàng nào không trước khi xóa
   const canDelete = (productId: string) => {
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
     return !orders.some((o: Order) => 
